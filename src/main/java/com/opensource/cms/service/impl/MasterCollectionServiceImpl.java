@@ -28,7 +28,7 @@ public class MasterCollectionServiceImpl implements MasterCollectionService {
     }
 
     private String buildCommonFieldStatement(MasterTableFieldConfig field) {
-        String commonFieldConfig = " ";
+        String commonFieldConfig = " (";
         if (field.isFieldAutoIncrementYN()) {
             commonFieldConfig += (" " + CMSUtils.CMS_PRIMARY_KEY);
         }
@@ -42,7 +42,7 @@ public class MasterCollectionServiceImpl implements MasterCollectionService {
             commonFieldConfig += (" " + CMSUtils.CMS_DEFAULT);
             commonFieldConfig += (" " + field.getFieldDefaultValue());
         }
-        return commonFieldConfig;
+        return commonFieldConfig +");";
     }
 
 }
