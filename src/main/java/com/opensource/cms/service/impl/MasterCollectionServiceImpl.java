@@ -11,22 +11,38 @@ public class MasterCollectionServiceImpl implements MasterCollectionService {
 
     @Override
     public String createCollection(MasterTableConfig masterTableConfig) {
-        return generateSQLQuery(masterTableConfig);
+        return this.generateSQLQuery(masterTableConfig);
     }
 
     @Override
     public String generateSQLQuery(MasterTableConfig masterTableConfig) {
         String fieldLine = masterTableConfig.getCollectionTableFields().stream()
                 .map(field -> {
-                    return generateFieldStatement(field);
+                    return this.generateFieldStatement(field);
                 }).collect(Collectors.joining(", "));
-        return CMSUtils.CREATE_TABLE + fieldLine;
+        return CMSUtils.CMS_CREATE_TABLE + " " + fieldLine;
     }
 
     private String generateFieldStatement(MasterTableFieldConfig field) {
-        String fieldStatement = "";
+        return field.getFieldName() + this.buildCommonFieldStatement(field);
+    }
 
-        return fieldStatement;
+    private String buildCommonFieldStatement(MasterTableFieldConfig field) {
+        String commonFieldConfig = " ";
+        if (field.isFieldAutoIncrementYN()) {
+            commonFieldConfig += (" " + CMSUtils.CMS_PRIMARY_KEY);
+        }
+        if (field.isFieldNotNullYN()) {
+            commonFieldConfig += (" " + CMSUtils.CMS_NOT_NULL);
+        }
+        if (field.isFieldPrimaryKeyYN()) {
+            commonFieldConfig += (" " + CMSUtils.CMS_PRIMARY_KEY);
+        }
+        if (field.isFieldDefaultYN()) {
+            commonFieldConfig += (" " + CMSUtils.CMS_DEFAULT);
+            commonFieldConfig += (" " + field.getFieldDefaultValue());
+        }
+        return commonFieldConfig;
     }
 
 }
