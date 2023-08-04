@@ -2,11 +2,14 @@ package com.opensource.cms.service.impl;
 
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import com.opensource.cms.dto.MasterTableConfig;
 import com.opensource.cms.dto.MasterTableFieldConfig;
 import com.opensource.cms.service.MasterCollectionService;
 import com.opensource.cms.util.CMSUtils;
 
+@Service
 public class MasterCollectionServiceImpl implements MasterCollectionService {
 
     @Override
@@ -42,7 +45,7 @@ public class MasterCollectionServiceImpl implements MasterCollectionService {
             commonFieldConfig += (" " + CMSUtils.CMS_DEFAULT);
             commonFieldConfig += (" " + field.getFieldDefaultValue());
         }
-        return commonFieldConfig +");";
+        return commonFieldConfig + ");";
     }
 
 }
