@@ -11,7 +11,7 @@ import com.opensource.cms.dto.MasterTableConfig;
 import com.opensource.cms.service.MasterCollectionService;
 
 @RestController
-@RequestMapping(value = "/credential")
+@RequestMapping(value = "/collectionGroup")
 public class MasterTableController {
 
     @Autowired

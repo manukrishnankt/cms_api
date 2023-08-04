@@ -20,18 +20,19 @@ public class MasterCollectionServiceImpl implements MasterCollectionService {
     @Override
     public String generateSQLQuery(MasterTableConfig masterTableConfig) {
         String fieldLine = masterTableConfig.getCollectionTableFields().stream()
-                .map(field -> {
-                    return this.generateFieldStatement(field);
-                }).collect(Collectors.joining(", "));
-        return CMSUtils.CMS_CREATE_TABLE + " " + fieldLine;
+                .map(this::generateFieldStatement).collect(Collectors.joining(", "));
+        return CMSUtils.CMS_CREATE_TABLE + " " + masterTableConfig.getCollectionGroupName() + "( " + fieldLine + " );";
     }
 
     private String generateFieldStatement(MasterTableFieldConfig field) {
-        return field.getFieldName() + this.buildCommonFieldStatement(field);
+        return this.buildCommonFieldStatement(field);
     }
 
     private String buildCommonFieldStatement(MasterTableFieldConfig field) {
-        String commonFieldConfig = " (";
+        String commonFieldConfig = field.getFieldName() + " " + field.getFieldDataType();
+        if (isNumeric(field.getFieldLength())) {
+            commonFieldConfig += "(" + field.getFieldLength() + ")";
+        }
         if (field.isFieldAutoIncrementYN()) {
             commonFieldConfig += (" " + CMSUtils.CMS_PRIMARY_KEY);
         }
@@ -45,7 +46,15 @@ public class MasterCollectionServiceImpl implements MasterCollectionService {
             commonFieldConfig += (" " + CMSUtils.CMS_DEFAULT);
             commonFieldConfig += (" " + field.getFieldDefaultValue());
         }
-        return commonFieldConfig + ");";
+        return commonFieldConfig;
     }
 
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
